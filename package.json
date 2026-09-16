@@ -2,5 +2,8 @@
   "name": "presentacion-cetecom",
   "version": "1.0.0",
   "private": true,
-  "main": "api/slide.js"
+  "main": "api/slide.js",
+  "dependencies": {
+    "@neondatabase/serverless": "^0.10.0"
+  }
 }
