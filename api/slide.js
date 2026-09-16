@@ -24,7 +24,8 @@ module.exports = async function handler(req, res) {
 function neonQuery(connStr, sql, params) {
     return new Promise((resolve, reject) => {
         const body = JSON.stringify({ query: sql, params });
-        const host = 'ep-tiny-haze-ac27404h.sa-east-1.aws.neon.tech';
+        const m = connStr.match(/@([^/]+)/);
+        const host = m ? m[1] : 'ep-tiny-haze-ac27404h.sa-east-1.aws.neon.tech';
         const r = https.request({
             hostname: host, port: 443, path: '/sql', method: 'POST',
             headers: {
