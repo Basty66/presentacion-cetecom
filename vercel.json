@@ -1,9 +1,7 @@
 {
   "version": 2,
-  "outputDirectory": "public",
   "routes": [
-    { "src": "^/api/(.*)", "dest": "/api/$1" },
-    { "src": "^/$", "dest": "/index.html" },
+    { "src": "^/$", "dest": "/Presentacion_CETECOM.html" },
     { "src": "^/presentacion$", "dest": "/Presentacion_CETECOM.html" },
     { "src": "^/remote$", "dest": "/remote.html" },
     { "src": "^/gantt$", "dest": "/Gantt_Interactivo_CETECOM.html" }
