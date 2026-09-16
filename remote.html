@@ -96,6 +96,7 @@
         <p>IP del PC: <span class="ip" id="pcIp">-</span></p>
     </div>
     
+    <script src="firebase-sync.js"></script>
     <script>
     const TOTAL = 12;
     const TITLES = [
@@ -114,9 +115,7 @@
     ];
     
     let currentSlide = 0;
-    let eventSource = null;
-    let connected = false;
-    
+
     function updateUI() {
         document.getElementById('slideNum').textContent = currentSlide + 1;
         document.getElementById('slideTitle').textContent = TITLES[currentSlide] || '-';
@@ -178,34 +177,14 @@
         sendSlide(currentSlide);
     }
     
-    function connectSSE() {
-        if (eventSource) eventSource.close();
-        
-        eventSource = new EventSource('/events');
-        
-        eventSource.onmessage = (e) => {
-            try {
-                const data = JSON.parse(e.data);
-                if (data.slide !== undefined) {
-                    currentSlide = data.slide;
-                    updateUI();
-                }
-            } catch (err) {}
-        };
-        
-        eventSource.onopen = () => {
-            connected = true;
-            document.getElementById('statusDot').classList.add('on');
-            document.getElementById('statusText').textContent = 'Conectado';
-        };
-        
-        eventSource.onerror = () => {
-            connected = false;
-            document.getElementById('statusDot').classList.remove('on');
-            document.getElementById('statusText').textContent = 'Reconectando...';
-            setTimeout(connectSSE, 3000);
-        };
-    }
+    // Firebase sync
+    initRoom();
+    onSlideChange((remoteSlide) => {
+        currentSlide = remoteSlide;
+        updateUI();
+        document.getElementById('statusDot').classList.add('on');
+        document.getElementById('statusText').textContent = 'Conectado';
+    });
     
     // Touch gestures on the whole screen
     let touchStartX = 0;
@@ -234,12 +213,11 @@
         });
     });
     
-    // Get PC IP from current URL
-    document.getElementById('pcIp').textContent = window.location.hostname;
+    // Show current URL for sharing
+    document.getElementById('pcIp').textContent = window.location.origin;
     
     // Init
     updateUI();
-    connectSSE();
     </script>
 </body>
 </html>

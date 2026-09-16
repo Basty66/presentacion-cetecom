@@ -184,6 +184,7 @@
     </style>
 </head>
 <body>
+    <script src="firebase-sync.js"></script>
     <div class="prog" id="prog"></div>
     <div class="timer"><div class="dot"></div><span id="timer">00:00</span></div>
     <div class="counter" id="counter">1 / 12</div>
@@ -467,12 +468,6 @@
     let cur=0,total=12,start=Date.now();
     const slides=document.querySelectorAll('.slide');
     
-    // Server connection indicator
-    const connBadge=document.createElement('div');
-    connBadge.style.cssText='position:fixed;top:20px;left:40px;font-size:11px;color:var(--txt2);z-index:100;display:flex;align-items:center;gap:6px;font-weight:500';
-    connBadge.innerHTML='<div style="width:6px;height:6px;border-radius:50%;background:var(--red)" id="connDot"></div><span id="connText">Sin conexion</span>';
-    document.body.appendChild(connBadge);
-    
     function show(n){
         slides[cur].classList.remove('active');
         slides[cur].classList.add('exit');
@@ -486,8 +481,7 @@
         document.getElementById('mobNext').disabled=cur===total-1;
         document.getElementById('mobCounter').textContent=`${cur+1} / ${total}`;
         document.getElementById('prog').style.width=`${((cur+1)/total)*100}%`;
-        // Send to remote if connected
-        if(serverConnected) sendSlide(cur);
+        setSlide(cur);
     }
     function go(d){show(cur+d)}
     document.addEventListener('keydown',e=>{
@@ -509,51 +503,26 @@
     
     setInterval(()=>{const s=Math.floor((Date.now()-start)/1000);document.getElementById('timer').textContent=`${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`},1000);
     
-    // === SERVER SYNC ===
-    let serverConnected=false;
-    let eventSource=null;
+    // === FIREBASE SYNC ===
+    initRoom();
     
-    function sendSlide(slide){
-        fetch('/api/slide',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide})}).catch(()=>{});
-    }
-    
-    function connectToServer(){
-        if(eventSource)eventSource.close();
-        eventSource=new EventSource('/events');
-        eventSource.onopen=()=>{
-            serverConnected=true;
-            document.getElementById('connDot').style.background='var(--grn)';
-            document.getElementById('connText').textContent='Control remoto activo';
-        };
-        eventSource.onmessage=(e)=>{
-            try{
-                const data=JSON.parse(e.data);
-                if(data.slide!==undefined && data.slide!==cur){
-                    slides[cur].classList.remove('active');
-                    slides[cur].classList.add('exit');
-                    setTimeout(()=>slides[cur].classList.remove('exit'),700);
-                    cur=data.slide;
-                    slides[cur].classList.add('active');
-                    document.getElementById('prev').disabled=cur===0;
-                    document.getElementById('next').disabled=cur===total-1;
-                    document.getElementById('counter').textContent=`${cur+1} / ${total}`;
-                    document.getElementById('mobPrev').disabled=cur===0;
-                    document.getElementById('mobNext').disabled=cur===total-1;
-                    document.getElementById('mobCounter').textContent=`${cur+1} / ${total}`;
-                    document.getElementById('prog').style.width=`${((cur+1)/total)*100}%`;
-                }
-            }catch(err){}
-        };
-        eventSource.onerror=()=>{
-            serverConnected=false;
-            document.getElementById('connDot').style.background='var(--red)';
-            document.getElementById('connText').textContent='Sin conexion';
-            setTimeout(connectToServer,3000);
-        };
-    }
-    
-    // Try to connect to server
-    connectToServer();
+    // Listen for remote slide changes
+    onSlideChange((remoteSlide) => {
+        if (remoteSlide !== cur) {
+            slides[cur].classList.remove('active');
+            slides[cur].classList.add('exit');
+            setTimeout(() => slides[cur].classList.remove('exit'), 700);
+            cur = remoteSlide;
+            slides[cur].classList.add('active');
+            document.getElementById('prev').disabled = cur === 0;
+            document.getElementById('next').disabled = cur === total - 1;
+            document.getElementById('counter').textContent = `${cur + 1} / ${total}`;
+            document.getElementById('mobPrev').disabled = cur === 0;
+            document.getElementById('mobNext').disabled = cur === total - 1;
+            document.getElementById('mobCounter').textContent = `${cur + 1} / ${total}`;
+            document.getElementById('prog').style.width = `${((cur + 1) / total) * 100}%`;
+        }
+    });
     </script>
 </body>
 </html>
