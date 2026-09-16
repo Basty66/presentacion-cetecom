@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Control Remoto - CETECOM</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        
+        :root{--bg:#0a0e1a;--s1:#111827;--s2:#1e293b;--s3:#334155;--acc:#3b82f6;--acc2:#60a5fa;--grn:#22c55e;--grn2:#4ade80;--red:#ef4444;--txt:#f1f5f9;--txt2:#94a3b8}
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--txt);height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direction:column;user-select:none;-webkit-user-select:none}
+        
+        .header{padding:16px 20px;text-align:center;border-bottom:1px solid var(--s3)}
+        .header h1{font-size:1rem;font-weight:800;margin-bottom:2px}
+        .header .status{font-size:.7rem;display:flex;align-items:center;justify-content:center;gap:6px}
+        .header .dot{width:8px;height:8px;border-radius:50%;background:var(--red);transition:background .3s}
+        .header .dot.on{background:var(--grn);animation:pulse 2s infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+        
+        .main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+        
+        .slide-info{text-align:center;margin-bottom:30px}
+        .slide-num{font-size:4rem;font-weight:900;background:linear-gradient(135deg,var(--acc2),var(--grn2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+        .slide-total{font-size:1rem;color:var(--txt2);margin-top:4px}
+        .slide-title{font-size:.85rem;color:var(--txt2);margin-top:12px;max-width:250px}
+        
+        .nav-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:320px}
+        .nav-btn{height:100px;border-radius:20px;border:2px solid var(--s3);background:var(--s1);color:var(--txt);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;transition:all .2s;position:relative;overflow:hidden}
+        .nav-btn:active{transform:scale(.95);border-color:var(--acc);background:rgba(59,130,246,.1)}
+        .nav-btn svg{width:32px;height:32px;fill:currentColor;transition:transform .2s}
+        .nav-btn:active svg{transform:scale(1.1)}
+        .nav-btn span{font-size:.8rem;font-weight:600}
+        .nav-btn.disabled{opacity:.3;pointer-events:none}
+        
+        .nav-btn.prev:active{border-color:var(--acc);box-shadow:0 0 30px rgba(59,130,246,.2)}
+        .nav-btn.next:active{border-color:var(--grn);box-shadow:0 0 30px rgba(34,197,94,.2)}
+        .nav-btn.first:active{border-color:var(--pur);box-shadow:0 0 30px rgba(168,85,247,.2)}
+        .nav-btn.last:active{border-color:var(--org);box-shadow:0 0 30px rgba(249,115,22,.2)}
+        
+        .progress{width:100%;max-width:320px;margin-top:24px}
+        .prog-bar{height:6px;background:var(--s3);border-radius:3px;overflow:hidden}
+        .prog-fill{height:100%;background:linear-gradient(90deg,var(--acc),var(--grn));border-radius:3px;transition:width .3s ease}
+        .prog-label{text-align:center;font-size:.7rem;color:var(--txt2);margin-top:6px}
+        
+        .footer{padding:12px 20px;text-align:center;border-top:1px solid var(--s3)}
+        .footer p{font-size:.65rem;color:var(--txt2)}
+        .footer .ip{font-weight:600;color:var(--acc2)}
+        
+        .ripple{position:fixed;width:60px;height:60px;border-radius:50%;background:rgba(59,130,246,.3);transform:translate(-50%,-50%) scale(0);animation:ripple .6s ease-out;pointer-events:none;z-index:1000}
+        @keyframes ripple{to{transform:translate(-50%,-50%) scale(4);opacity:0}}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Control Remoto CETECOM</h1>
+        <div class="status">
+            <div class="dot" id="statusDot"></div>
+            <span id="statusText">Conectando...</span>
+        </div>
+    </div>
+    
+    <div class="main">
+        <div class="slide-info">
+            <div class="slide-num" id="slideNum">1</div>
+            <div class="slide-total">de 12 diapositivas</div>
+            <div class="slide-title" id="slideTitle">-</div>
+        </div>
+        
+        <div class="nav-grid">
+            <button class="nav-btn first" id="btnFirst" onclick="goFirst()">
+                <svg viewBox="0 0 24 24"><path d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>
+                <span>Inicio</span>
+            </button>
+            <button class="nav-btn prev" id="btnPrev" onclick="goPrev()">
+                <svg viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+                <span>Anterior</span>
+            </button>
+            <button class="nav-btn next" id="btnNext" onclick="goNext()">
+                <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                <span>Siguiente</span>
+            </button>
+            <button class="nav-btn last" id="btnLast" onclick="goLast()">
+                <svg viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg>
+                <span>Final</span>
+            </button>
+        </div>
+        
+        <div class="progress">
+            <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+            <div class="prog-label" id="progLabel">Diapositiva 1 de 12</div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>IP del PC: <span class="ip" id="pcIp">-</span></p>
+    </div>
+    
+    <script>
+    const TOTAL = 12;
+    const TITLES = [
+        'Titulo',
+        'La Organizacion',
+        'El Problema',
+        'Factores Ambientales',
+        'EDT',
+        'Cronograma',
+        'Predictivo',
+        'Herramientas',
+        'Presupuesto',
+        'Beneficios',
+        'Riesgos',
+        'Preguntas'
+    ];
+    
+    let currentSlide = 0;
+    let eventSource = null;
+    let connected = false;
+    
+    function updateUI() {
+        document.getElementById('slideNum').textContent = currentSlide + 1;
+        document.getElementById('slideTitle').textContent = TITLES[currentSlide] || '-';
+        document.getElementById('progFill').style.width = `${((currentSlide + 1) / TOTAL) * 100}%`;
+        document.getElementById('progLabel').textContent = `Diapositiva ${currentSlide + 1} de ${TOTAL}`;
+        
+        document.getElementById('btnFirst').classList.toggle('disabled', currentSlide === 0);
+        document.getElementById('btnPrev').classList.toggle('disabled', currentSlide === 0);
+        document.getElementById('btnNext').classList.toggle('disabled', currentSlide === TOTAL - 1);
+        document.getElementById('btnLast').classList.toggle('disabled', currentSlide === TOTAL - 1);
+    }
+    
+    function createRipple(x, y) {
+        const ripple = document.createElement('div');
+        ripple.className = 'ripple';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        document.body.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+    }
+    
+    async function sendSlide(slide) {
+        try {
+            await fetch('/api/slide', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ slide })
+            });
+        } catch (e) {
+            console.error('Error sending slide:', e);
+        }
+    }
+    
+    function goNext() {
+        if (currentSlide < TOTAL - 1) {
+            currentSlide++;
+            updateUI();
+            sendSlide(currentSlide);
+        }
+    }
+    
+    function goPrev() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            updateUI();
+            sendSlide(currentSlide);
+        }
+    }
+    
+    function goFirst() {
+        currentSlide = 0;
+        updateUI();
+        sendSlide(currentSlide);
+    }
+    
+    function goLast() {
+        currentSlide = TOTAL - 1;
+        updateUI();
+        sendSlide(currentSlide);
+    }
+    
+    function connectSSE() {
+        if (eventSource) eventSource.close();
+        
+        eventSource = new EventSource('/events');
+        
+        eventSource.onmessage = (e) => {
+            try {
+                const data = JSON.parse(e.data);
+                if (data.slide !== undefined) {
+                    currentSlide = data.slide;
+                    updateUI();
+                }
+            } catch (err) {}
+        };
+        
+        eventSource.onopen = () => {
+            connected = true;
+            document.getElementById('statusDot').classList.add('on');
+            document.getElementById('statusText').textContent = 'Conectado';
+        };
+        
+        eventSource.onerror = () => {
+            connected = false;
+            document.getElementById('statusDot').classList.remove('on');
+            document.getElementById('statusText').textContent = 'Reconectando...';
+            setTimeout(connectSSE, 3000);
+        };
+    }
+    
+    // Touch gestures on the whole screen
+    let touchStartX = 0;
+    let touchStartY = 0;
+    
+    document.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    
+    document.addEventListener('touchend', (e) => {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+            if (dx < 0) goNext();
+            else goPrev();
+        }
+    });
+    
+    // Add ripple effect on buttons
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const rect = btn.getBoundingClientRect();
+            createRipple(e.clientX || rect.left + rect.width/2, e.clientY || rect.top + rect.height/2);
+        });
+    });
+    
+    // Get PC IP from current URL
+    document.getElementById('pcIp').textContent = window.location.hostname;
+    
+    // Init
+    updateUI();
+    connectSSE();
+    </script>
+</body>
+</html>

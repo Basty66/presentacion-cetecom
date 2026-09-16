@@ -1,0 +1,180 @@
+# PITCH PARA DEFENSA - MESA DE AYUDA CETECOM
+## Guion para responder las 6 preguntas de la evaluación
+
+---
+
+## ANTES DE EMPEZAR (Datos para memorizar)
+
+**Nombre del proyecto:** Sistema Centralizado de Mesa de Ayuda y Gestión de Insumos CETECOM
+
+**Organización:** Duoc UC Sede Melipilla
+
+**Problema:** Los docentes no tienen teléfono institucional. Usan WhatsApp personal con técnicos. Esto viola la Ley de Protección de Datos y no tiene trazabilidad.
+
+**Solución:** Plataforma web y móvil con:
+- Mail-to-Ticket (correo se convierte en ticket automáticamente)
+- PWA móvil (aplicación web progresiva para técnicos)
+- Inventario con códigos QR
+
+**Metodología:** Predictiva / Cascada / PMBOK (NUNCA decir Scrum, Sprints, Agile)
+
+**Duración:** 12 semanas (29/09/2026 al 08/12/2026)
+
+**Presupuesto:** $14.375.000 pesos chilenos
+
+**Equipo:** 6 personas (1 PM, 2 Desarrolladores, 1 Diseñador UX, 1 QA, 1 Administrador de Base de Datos)
+
+---
+
+## PREGUNTA 1: "¿Cuál es el contexto y necesidades de la organización trabajada?"
+
+### Guion (1-2 minutos):
+
+"Bueno, nuestra organización es **Duoc UC Sede Melipilla**, específicamente el **CETECOM** que es el Centro de Recursos Tecnológicos y Comunicaciones.
+
+**El problema que identificamos** es que los docentes **no tienen teléfono institucional** en las aulas. Cuando hay una falla técnica (proyector caído, computador no prende, etc.), el docente **usa su WhatsApp personal** para contactar al técnico.
+
+Esto genera **dos problemas graves**:
+
+**Primero, es ILEGAL.** La **Ley 21.719 de Protección de Datos Personales** prohíbe usar canales informales como WhatsApp para comunicaciones institucionales. Si un alumno reporta que sus datos fueron filtrados, la universidad tiene un problema legal.
+
+**Segundo, no hay TRAZABILIDAD.** No sabemos cuántos tickets se atienden, cuánto tarda el técnico, ni si se cumple el **SLA (Acuerdo de Nivel de Servicio)** de llegar en menos de 10 minutos al aula.
+
+**La solución** es crear una plataforma centralizada donde el docente envía un correo y se crea un ticket automáticamente, el técnico recibe una notificación en su celular, y todo queda registrado."
+
+---
+
+## PREGUNTA 2: "¿Cómo se determinó el alcance y recursos necesarios para el proyecto?"
+
+### Guion (1-2 minutos):
+
+"El alcance lo determinamos usando una **EDT (Estructura de Desglose de Trabajo)** que es como una lista jerárquica de todo lo que hay que hacer.
+
+Dividimos el proyecto en **6 fases principales**:
+
+1. **Gestión del Proyecto** - Acta de constitución, plan de dirección
+2. **Ingeniería de Requisitos** - Documento SRS (Software Requirements Specification)
+3. **Diseño y Arquitectura** - Maquetas UX/UI, modelo de base de datos
+4. **Desarrollo Core** - Mail-to-Ticket, PWA móvil, inventario QR
+5. **Calidad y Pruebas** - Pruebas unitarias, estrés, UAT (User Acceptance Testing / Pruebas de Aceptación de Usuario) en aula
+6. **Despliegue y Cierre** - Migración a producción, capacitación
+
+Esto nos dio **24 paquetes de trabajo** medibles.
+
+**Los recursos** los determinamos según el perfil técnico necesario:
+- 1 **PM (Project Manager / Gerente de Proyecto)** para coordinar
+- 2 **Desarrolladores Full-Stack** para el código
+- 1 **Diseñador UX (User Experience / Experiencia de Usuario)** para la interfaz
+- 1 **QA (Quality Assurance / Aseguramiento de Calidad)** para pruebas
+- 1 **DBA (Database Administrator / Administrador de Base de Datos)** para la base de datos
+
+**El presupuesto total** es de **$14.375.000 pesos chilenos**, con costos directos de $12.500.000 y una reserva de contingencia del 15% ($1.875.000) para imprevistos."
+
+---
+
+## PREGUNTA 3: "¿En base a qué criterios técnicos fue definido el cronograma de implementación?"
+
+### Guion (1-2 minutos):
+
+"El cronograma de **12 semanas** se definió usando dos técnicas:
+
+**Primero, estimación PERT (Program Evaluation and Review Technique / Técnica de Revisión y Evaluación de Programas)**. Para cada actividad estimamos tres valores:
+- El mejor escenario (optimista)
+- El escenario más probable
+- El peor escenario (pesimista)
+
+Y aplicamos la fórmula: **(Optimista + 4×Probable + Pesimista) / 6**
+
+**Segundo, identificamos la ruta crítica** que es el camino más largo del proyecto.
+
+**Los criterios técnicos que usamos fueron:**
+
+1. **Priorizar la arquitectura y API de notificaciones antes del frontend** (Semanas 1-7). Primero el motor, depois la interfaz.
+
+2. **Tener 3 semanas completas de pruebas** (Semanas 10-12). No dejar las pruebas para el final.
+
+3. **Los 6 hitos tienen fecha fija** para control estricto:
+   - Hito 1 (Semana 2): Acta y SRS aprobados
+   - Hito 2 (Semana 4): Diseño UX y modelo de datos
+   - Hito 3 (Semana 7): Backend y API listos
+   - Hito 4 (Semana 9): Frontend y PWA integrados
+   - Hito 5 (Semana 11): UAT en aula
+   - Hito 6 (Semana 12): Producción y cierre
+
+**¿Por qué 12 semanas?** Porque es el tiempo mínimo para hacer un proyecto completo con calidad. Menos tiempo significaría recortar pruebas o funcionalidad."
+
+---
+
+## PREGUNTA 4: "¿Qué beneficios tienen para la organización las estrategias de planificación e integración definidas?"
+
+### Guion (1-2 minutos):
+
+"Los beneficios son **cuatro concretos**:
+
+**Primero, CONTINUIDAD OPERATIVA.** El docente envía un correo y el ticket se crea automáticamente. No depende de si el técnico tiene el celular encendido o no. El sistema asigna al técnico más cercano.
+
+**Segundo, CUMPLIMIENTO LEGAL.** Se elimina el uso de WhatsApp personal. La **Ley 21.719 de Protección de Datos Personales** exige canales institucionales. Con nuestra plataforma, la universidad queda protegida legalmente.
+
+**Tercero, TRAZABILIDAD.** Cada incidente queda registrado con tiempos de respuesta. Podemos medir si se cumple el **SLA (Service Level Agreement / Acuerdo de Nivel de Servicio)** de llegar en menos de 10 minutos. Esto permite tomar decisiones basadas en datos.
+
+**Cuarto, REDUCCIÓN DE TIEMPOS.** La **PWA (Progressive Web App / Aplicación Web Progresiva)** móvil con notificaciones push permite al técnico más cercano responder inmediatamente. No hay demora por no revisar WhatsApp.
+
+**Además**, al ser un proyecto **Predictivo** con alcance definido y presupuesto cerrado, se elimina la incertidumbre. Sabemos exactamente qué vamos a hacer, cuánto va a costar y cuándo va a estar listo."
+
+---
+
+## PREGUNTA 5: "¿Qué elementos específicos del contexto de la organización fueron incorporados para una adecuada integración del proyecto?"
+
+### Guion (1-2 minutos):
+
+"Tres elementos clave que levantamos en la **ENTREVISTA OPERACIONAL**:
+
+**Primero, AUSENCIA DE TELÉFONOS INSTITUCIONALES.** Los docentes de Sede Melipilla **NO tienen anexos telefónicos fijos** en las aulas. Esto es un **EEF (Enterprise Environmental Factor / Factor Ambiental del Proyecto)** que condicionó toda la arquitectura. Por eso elegimos **Mail-to-Ticket** (correo a ticket) en vez de un sistema telefónico.
+
+**Segundo, ALTA MOVILIDAD DE TÉCNICOS.** Los técnicos se desplazan continuamente revisando carritos de computación por distintas aulas. No están sentados en un escritorio. Por eso necesitamos una **PWA (Progressive Web App / Aplicación Web Progresiva)** móvil con notificaciones push, no una aplicación de escritorio.
+
+**Tercero, URGENCIA LEGAL.** El cierre del canal informal de WhatsApp es una decisión **NORMATIVA**, no técnica. La universidad puede recibir sanciones si no cumple la **Ley 21.719 de Protección de Datos Personales**. Esto le da prioridad al proyecto.
+
+Estos **factores ambientales (EEFs)** no son detalles menores. **Condicionaron toda la arquitectura del sistema**: por qué elegimos tecnologías específicas, por qué el diseño es móvil-first, y por qué el presupuesto incluye reserva de contingencia."
+
+---
+
+## PREGUNTA 6: "¿Qué herramientas de planificación de proyectos fueron utilizadas y por qué se seleccionaron?"
+
+### Guion (1-2 minutos):
+
+"Usamos **herramientas del estándar PMBOK (Project Management Body of Knowledge / Guía del Cuerpo de Conocimiento de Gestión de Proyectos)**, que es el estándar internacional.
+
+Las seleccionamos siguiendo la actividad 1.4.2 de la materia, evaluando: **funcionalidades, facilidad de uso, integración y costo**.
+
+**Las 5 herramientas principales son:**
+
+1. **Acta de Constitución (1.2.1)** - Documento Word: Otorga **autoridad formal** al PM (Project Manager / Gerente de Proyecto) y compromete recursos institucionales. Sin esto, el PM no tiene poder para decidir.
+
+2. **EDT y Diccionario (2.4)** - Archivo Excel: Descompone el proyecto en **24 paquetes de trabajo** medibles. Es fácil de compartir y actualizar.
+
+3. **Presupuesto Detallado (2.6)** - Archivo Excel: Transparenta costos reales y reserva de contingencia del 15%. Permite control financiero.
+
+4. **Matriz RACI (1.3.1)** - Archivo Excel: Define quién **Aprueba** (A), quién **Ejecuta** (R), quién **Consulta** (C) y quién se **Informa** (I). Evita duplicidades y huecos de responsabilidad.
+
+5. **Plan de Calidad y Riesgos (2.7)** - Documento Word: Establece **KPIs (Key Performance Indicator / Indicador Clave de Rendimiento)** cuantificados: uptime 99.5%, SLA (Service Level Agreement / Acuerdo de Nivel de Servicio) < 10 minutos, 80% cobertura.
+
+**¿Por qué no Jira o Microsoft Project?** Porque el **PMBOK** es el estándar que evalúa esta asignatura, y porque nuestras herramientas (Word y Excel) son de bajo costo y todos las conocen. Para un proyecto Predictivo con alcance definido, son suficientes."
+
+---
+
+## CONSEJOS FINALES
+
+1. **Habla con tranquilidad** - No corras. Mejor pausar que atropellar.
+
+2. **Usa los datos** - Siempre respalda con números ($14.375.000, 12 semanas, 24 paquetes).
+
+3. **No digas "Scrum" o "Sprints"** - Es Predictivo. Si te confundes, corrige: "Me refiero a fases o hitos".
+
+4. **Si no sabes algo** - Di: "En mi experiencia, considero que..." o "Según la planificación que hicimos...".
+
+5. **Mira al docente** - No leas. Demuestra dominio.
+
+6. **Usa el apoyo visual** - Señala el papel kraft cuando respondas.
+
+7. **Tiempo** - Cada respuesta debe durar 1-2 minutos. No hables de más.

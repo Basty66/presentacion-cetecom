@@ -1,0 +1,190 @@
+# GUÍA DE ESTUDIO ACTUALIZADA - PITCH CETECOM
+## Basada en los PPT de la materia GPY1102
+
+---
+
+## CONCEPTOS CLASE QUE DEBES DOMINAR
+
+### Tema 1: Elaboración del Plan (PPT 1.1.1)
+- **Alcance**: qué hacemos y qué no (enunciado detallado)
+- **EDT (Estructura de Desglose de Trabajo)**: descomposición jerárquica del proyecto en entregables manejables. También se llama WBS (Work-Breakdown Structure)
+- **Técnica Delphi**: consenso de expertos anónimo para reducir sesgos
+- **Cronograma**: hitos, Gantt, red, CPM (Critical Path Method - Método de la Ruta Crítica), PERT (Program Evaluation and Review Technique - Técnica de Revisión y Evaluación de Programas)
+- **Costos**: fijos, variables, directos, indirectos, oportunidad, hundidos
+- **Recursos**: equipo, herramientas, tiempo, presupuesto
+
+### Tema 2: Factores Ambientales (PPT 1.2.1)
+- **EEF (Enterprise Environmental Factors / Factores Ambientales del Proyecto)**: fuerzas externas e internas que influyen en el proyecto
+- **Entorno organizacional**: cultura, valores, estructura, políticas
+- **Regulaciones gubernamentales**: leyes, privacidad, seguridad
+- **Avances tecnológicos**: IA (Inteligencia Artificial), nube, tecnologías emergentes
+- **Estándares**: PMBOK (Project Management Body of Knowledge - Guía del Cuerpo de Conocimiento de Gestión de Proyectos), CMMI (Capability Maturity Model Integration - Modelo de Integración de Madurez de Capacidad)
+
+### Tema 3: Metodologías (PPT 1.3.1)
+- **Predictivo**: secuencial, requisitos definidos al inicio, fases
+- **Adaptativo**: flexible, iterativo, incremental
+- **Cuándo usar cada uno**: requisitos estables vs. entornos inciertos
+
+### Tema 4: Herramientas (PPT 1.4.2)
+- Microsoft Project, Gantt Charts (Predictivo)
+- Jira, Trello, Asana (Adaptativo)
+- Criterios: funcionalidad, facilidad uso, integración, costo
+
+---
+
+## PREGUNTAS PROBABLES CON RESPUESTAS
+
+### PREGUNTA 1: "¿Qué es un EEF y cómo les afectó?"
+**Respuesta:**
+Los **EEF (Enterprise Environmental Factors / Factores Ambientales del Proyecto)** son fuerzas externas e internas que influyen en el proyecto. En CETECOM identificamos tres:
+1. **Ausencia de teléfonos institucionales**: los docentes no tienen anexos fijos
+2. **Alta movilidad de técnicos**: se desplazan continuamente revisando carritos de computación
+3. **Urgencia legal**: cierre del canal informal de WhatsApp por Ley de Protección de Datos Personales
+
+Estos factores condicionaron toda la arquitectura del sistema.
+
+---
+
+### PREGUNTA 2: "¿Qué es la EDT y cuántos paquetes tienen?"
+**Respuesta:**
+La **EDT (Estructura de Desglose de Trabajo)** es una descomposición jerárquica del proyecto en entregables manejables. También se conoce como **WBS (Work-Breakdown Structure)**. Nuestro proyecto tiene:
+- **6 fases principales**: Gestión del Proyecto, Ingeniería de Requisitos, Diseño y Arquitectura, Desarrollo Core, Calidad y Pruebas, Despliegue y Cierre
+- **24 paquetes de trabajo** medibles
+- Cada paquete tiene: entregable, responsable, duración, costo
+
+---
+
+### PREGUNTA 3: "¿Por qué Predictivo y no Agile?"
+**Respuesta:**
+Según la materia, el enfoque **Predictivo** es ideal cuando:
+- Los requisitos son **estables y claros** (no cambian)
+- Se necesita **estructura y control** (fases definidas)
+- Se busca **minimizar cambios** (entorno estable)
+
+En CETECOM:
+- Alcance definido: Mail-to-Ticket, PWA (Progressive Web App - Aplicación Web Progresiva), QR (Quick Response - Código de Respuesta Rápida)
+- Fecha fija: 08/12/2026
+- Presupuesto cerrado: $14.375.000 CLP (Peso Chileno)
+- Equipo reducido: 6 personas
+
+El **Enfoque Adaptativo** sería para entornos inciertos o innovadores, que no es nuestro caso.
+
+---
+
+### PREGUNTA 4: "¿Qué es la técnica Delphi?"
+**Respuesta:**
+La **Técnica Delphi** es un método de consenso de expertos donde:
+- Los expertos participan de forma **anónima**
+- Un **facilitador** usa cuestionarios para recopilar ideas
+- Las respuestas se **resumen y reenvían** para comentarios adicionales
+- Ayuda a **reducir parcialidades** y evita influencias inapropiadas en el resultado
+
+La usamos para definir los requerimientos del sistema de forma objetiva.
+
+---
+
+### PREGUNTA 5: "¿Cómo estimaron el cronograma?"
+**Respuesta:**
+Usamos **estimación PERT (Program Evaluation and Review Technique / Técnica de Revisión y Evaluación de Programas)** con tres valores:
+- **Optimista**: mejor escenario (4 días)
+- **Más probable**: escenario más realista (7 días)
+- **Pesimista**: peor escenario (16 días)
+
+Fórmula: **Duración = (Optimista + 4×Probable + Pesimista) / 6**
+
+También usamos **CPM (Critical Path Method / Método de la Ruta Crítica)** para identificar la ruta crítica:
+- Backend (Semanas 1-7) antes que Frontend (Semanas 8-9)
+- 3 semanas completas de QA (Quality Assurance / Aseguramiento de Calidad) y UAT (User Acceptance Testing / Pruebas de Aceptación de Usuario) en aula (Semanas 10-12)
+
+---
+
+### PREGUNTA 6: "¿Qué herramientas PMBOK usaron y por qué?"
+**Respuesta:**
+Según la actividad 1.4.2, seleccionamos herramientas por:
+- **Funcionalidades**: qué hacen
+- **Facilidad de uso**: qué tan fáciles son
+- **Integración**: cómo se conectan entre sí
+- **Costo**: cuánto cuestan
+
+Nuestras herramientas del estándar **PMBOK (Project Management Body of Knowledge / Guía del Cuerpo de Conocimiento de Gestión de Proyectos)**:
+1. **Acta de Constitución** (Word): autoridad formal al **PM (Project Manager / Gerente de Proyecto)**
+2. **EDT (Estructura de Desglose de Trabajo)** (Excel): descomposición en 24 paquetes
+3. **Presupuesto Detallado** (Excel): costos reales + contingencia 15%
+4. **Matriz RACI (Responsible, Accountable, Consulted, Informed / Responsable, Aprobador, Consultado, Informado)** (Excel): roles claros
+5. **Plan de Calidad y Riesgos** (Word): **KPI (Key Performance Indicator / Indicador Clave de Rendimiento)**: uptime 99.5%, SLA (Service Level Agreement / Acuerdo de Nivel de Servicio) < 10 minutos
+
+Son el **estándar PMBOK** (Project Management Institute, 2021).
+
+---
+
+### PREGUNTA 7: "¿Qué son los costos hundidos?"
+**Respuesta:**
+Según la materia, los **costos hundidos** (o costos enterrados) son costos que **ya fueron devengados** y no cambiarán con la decisión de hacer o no hacer el proyecto. En nuestro caso, no aplica porque es un proyecto nuevo.
+
+Ejemplos de costos en nuestro proyecto:
+- **Costos Directos**: sueldos del equipo ($10.800.000 CLP)
+- **Costos Fijos**: licencias de software ($800.000 CLP)
+- **Costos Indirectos**: infraestructura compartida ($900.000 CLP)
+- **Contingencia**: reserva del 15% ($1.875.000 CLP)
+
+---
+
+### PREGUNTA 8: "¿Qué es CMMI y cómo aplica?"
+**Respuesta:**
+**CMMI (Capability Maturity Model Integration / Modelo de Integración de Madurez de Capacidad)** es un modelo para mejorar la **madurez de los procesos**. Sus puntos clave:
+- **Madurez de Procesos**: evalúa y mejora la efectividad
+- **Mejora Continua**: cultura de innovación y adaptabilidad
+- **Calidad y Eficiencia**: estándares altos
+
+En nuestro proyecto, aplicamos CMMI al:
+- Documentar procesos (EDT, RACI)
+- Establecer KPIs (Indicadores Clave de Rendimiento) medibles
+- Implementar revisiones de calidad
+
+---
+
+## DATOS CLAVE PARA MEMORIZAR
+
+| Dato | Valor |
+|:-----|:------|
+| Nombre proyecto | Sistema Centralizado de Mesa de Ayuda y Gestión de Insumos CETECOM |
+| Organización | Duoc UC Sede Melipilla |
+| Problema | Docentes sin teléfono + uso WhatsApp personal |
+| Solución | Mail-to-Ticket + PWA (Aplicación Web Progresiva) + QR (Código de Respuesta Rápida) |
+| Metodología | Predictiva / Cascada / PMBOK (Guía del Cuerpo de Conocimiento de Gestión de Proyectos) |
+| Duración | 12 semanas (6 hitos) |
+| Presupuesto | $14.375.000 CLP (Peso Chileno) |
+| Costos directos | $12.500.000 CLP |
+| Contingencia | $1.875.000 CLP (15%) |
+| Equipo | 1 PM (Gerente de Proyecto), 2 Desarrolladores Full-Stack, 1 UX (User Experience / Experiencia de Usuario), 1 QA (Quality Assurance / Aseguramiento de Calidad), 1 DBA (Database Administrator / Administrador de Base de Datos) |
+| SLA (Service Level Agreement / Acuerdo de Nivel de Servicio) clave | Llegada presencial < 10 minutos |
+| Uptime (Tiempo de actividad) | 99.5% |
+| Estándares | PMBOK 7a edición, ITIL v4 (Information Technology Infrastructure Library), ISO/IEC 25010, Ley 21.719 de Protección de Datos Personales |
+
+---
+
+## ERRORES COMUNES A EVITAR
+
+1. **No decir**: "Es un problema de comodidad"
+   **Decir**: "Es un problema LEGAL y OPERATIVO"
+
+2. **No decir**: "Se calculó a ojo"
+   **Decir**: "Usamos estimación PERT (Program Evaluation and Review Technique) con 3 puntos"
+
+3. **No decir**: "Usamos Jira/Scrum"
+   **Decir**: "Usamos herramientas PMBOK (Project Management Body of Knowledge): Acta, EDT (Estructura de Desglose de Trabajo), Presupuesto, RACI (Responsible, Accountable, Consulted, Informed), Calidad"
+
+4. **No decir**: "El contexto es normal"
+   **Decir**: "La entrevista operacional reveló 3 factores clave"
+
+5. **No decir**: "Mejora el soporte"
+   **Decir**: "4 beneficios: continuidad, legal, trazabilidad, reducción tiempos"
+
+---
+
+## REFERENCIAS BIBLIOGRÁFICAS
+
+1. Project Management Institute. (2017). Guía del PMBOK (6ta ed.)
+2. Wysocki, R. K. (2019). Effective Project Management (8th ed.)
+3. Layton, M. C. (2022). Scrum for Dummies (3rd ed.)
+4. Peters, L. J. (2024). Software Project Management

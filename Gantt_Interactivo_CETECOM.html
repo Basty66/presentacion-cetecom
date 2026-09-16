@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gantt Premium - Mesa de Ayuda CETECOM</title>
+    <style>
+        :root{--bg:#0a0e1a;--s1:#1a2332;--s2:#1e293b;--s3:#253347;--bdr:#334155;--txt:#f1f5f9;--txt2:#94a3b8;--acc:#3b82f6;--acc2:#60a5fa;--grn:#22c55e;--grn2:#4ade80;--org:#f97316;--org2:#fb923c;--red:#ef4444;--yel:#eab308;--pur:#a855f7;--cyn:#06b6d4}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);min-height:100vh;padding:16px;color:var(--txt)}
+        .app{max-width:100%;margin:0 auto}
+
+        /* SVG Icons */
+        .i{display:inline-flex;width:1em;height:1em;vertical-align:middle;fill:currentColor;flex-shrink:0}
+
+        /* Header */
+        .hdr{background:var(--s1);border:1px solid var(--bdr);border-radius:16px;padding:22px;margin-bottom:14px;position:relative}
+        .hdr-c{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;position:relative;z-index:1}
+        .hdr h1{font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,var(--acc2),var(--cyn));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .hdr p{color:var(--txt2);font-size:.8rem;margin-top:2px}
+        .hdr-b{display:flex;gap:6px;flex-wrap:wrap;position:relative}
+
+        /* Badges */
+        .bdg{padding:6px 12px;border-radius:8px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;position:relative;display:inline-flex;align-items:center;gap:5px;transition:all .2s;border:1px solid transparent;user-select:none}
+        .bdg:hover{filter:brightness(1.1);transform:translateY(-1px)}
+        .bdg:active{transform:translateY(0)}
+        .bdg svg{width:12px;height:12px;fill:currentColor}
+        .bdg-bl{background:rgba(59,130,246,.12);color:var(--acc2);border-color:rgba(59,130,246,.25)}
+        .bdg-gn{background:rgba(34,197,94,.12);color:var(--grn2);border-color:rgba(34,197,94,.25)}
+        .bdg-or{background:rgba(249,115,22,.12);color:var(--org2);border-color:rgba(249,115,22,.25)}
+
+        /* Meth Modal */
+        .mp{display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);align-items:center;justify-content:center}
+        .mp.show{display:flex}
+        .mp-box{background:var(--s1);border:1px solid var(--bdr);border-radius:16px;padding:24px;width:min(520px,92vw);max-height:85vh;overflow-y:auto;animation:fu .25s ease;box-shadow:0 25px 80px rgba(0,0,0,.5)}
+        @keyframes fu{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+        .mp-box h3{font-size:1rem;font-weight:800;color:var(--acc2);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+        .mp-box h3 svg{width:18px;height:18px;fill:var(--acc2)}
+        .mp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+        .mp-c{background:var(--s2);border-radius:10px;padding:14px;border:1px solid var(--bdr)}
+        .mp-c h4{font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;color:var(--txt2);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+        .mp-c h4 svg{width:14px;height:14px;flex-shrink:0}
+        .mp-c p{font-size:.78rem;line-height:1.5;color:var(--txt)}
+        .mp-c.ok{border-color:var(--grn);background:rgba(34,197,94,.04)}.mp-c.ok h4{color:var(--grn2)}
+        .mp-c.no{border-color:rgba(239,68,68,.25);opacity:.8}.mp-c.no h4{color:var(--red)}
+        .mp-tg{display:inline-block;padding:3px 10px;border-radius:5px;font-size:.64rem;font-weight:700;margin-top:8px}
+        .tg-s{background:rgba(34,197,94,.15);color:var(--grn2)}.tg-n{background:rgba(239,68,68,.12);color:var(--red)}
+        .mp-ft{padding:12px 14px;background:var(--s2);border-radius:10px;border-left:3px solid var(--acc);font-size:.76rem;color:var(--txt2);line-height:1.6}
+        .mp-ft strong{color:var(--txt)}
+        .mp-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:8px;border:1px solid var(--bdr);background:var(--s2);color:var(--txt2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+        .mp-close:hover{background:var(--red);color:#fff;border-color:var(--red)}
+        .mp-close svg{width:14px;height:14px;fill:currentColor}
+
+        /* Stats */
+        .sts{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px}
+        .st{background:var(--s1);border:1px solid var(--bdr);border-radius:12px;padding:14px;transition:all .3s;cursor:default;position:relative;overflow:hidden}
+        .st::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--acc),var(--cyn));opacity:0;transition:opacity .3s}
+        .st:hover::before{opacity:1}.st:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,0,0,.2)}
+        .st h3{font-size:.58rem;text-transform:uppercase;letter-spacing:1px;color:var(--txt2);margin-bottom:4px;display:flex;align-items:center;gap:4px}
+        .st h3 svg{width:10px;height:10px;fill:currentColor}
+        .st .v{font-size:1.2rem;font-weight:800}.st .s{font-size:.6rem;color:var(--txt2);margin-top:2px}
+        .st:nth-child(1) .v{color:var(--acc2)}.st:nth-child(2) .v{color:var(--grn2)}.st:nth-child(3) .v{color:var(--org2)}
+        .st:nth-child(4) .v{color:var(--pur)}.st:nth-child(5) .v{color:var(--cyn)}.st:nth-child(6) .v{color:var(--pnk)}
+
+        /* Countdown */
+        .cdb{background:var(--s1);border:1px solid var(--bdr);border-radius:10px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+        .cdb>.lb{font-size:.72rem;font-weight:700;color:var(--txt2);white-space:nowrap;display:flex;align-items:center;gap:4px}
+        .cdb>.lb svg{width:12px;height:12px;fill:currentColor}
+        .cdi{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:var(--s2);border-radius:7px;border:1px solid var(--bdr);transition:all .2s}
+        .cdi-click{cursor:pointer;border-color:rgba(34,197,94,.3)}.cdi-click:hover{background:rgba(34,197,94,.08);border-color:var(--grn);transform:translateY(-1px)}
+        .cdd{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+        .cdi span{font-size:.72rem;font-weight:600;white-space:nowrap}
+
+        /* Progress */
+        .pg{background:var(--s1);border:1px solid var(--bdr);border-radius:12px;padding:16px 20px;margin-bottom:14px}
+        .pg-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+        .pg-h h3{font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:6px}
+        .pg-h h3 svg{width:14px;height:14px;fill:var(--acc2)}
+        .pg-h span{font-size:1rem;font-weight:800;color:var(--acc2)}
+        .pg-b{height:10px;background:var(--s3);border-radius:10px;overflow:hidden}
+        .pg-f{height:100%;border-radius:10px;transition:width 1s cubic-bezier(.4,0,.2,1);background:linear-gradient(90deg,var(--acc),var(--cyn),var(--grn));position:relative}
+        .pg-f::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);animation:sh 2s infinite}
+        @keyframes sh{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+        /* Controls */
+        .ctrl{display:flex;gap:10px;margin-bottom:14px;align-items:center}
+        .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 14px;border-radius:6px;border:1px solid var(--bdr);background:transparent;color:var(--txt2);font-size:.75rem;font-weight:500;cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap;height:32px;box-sizing:border-box}
+        .btn svg{width:14px;height:14px;fill:currentColor;flex-shrink:0}
+        .btn:hover{background:rgba(255,255,255,.05)}
+        .btn.gn{border-color:rgba(34,197,94,.5);color:var(--grn2)}.btn.gn:hover{background:rgba(34,197,94,.1)}
+        .btn.rd{border-color:rgba(239,68,68,.5);color:var(--red)}.btn.rd:hover{background:rgba(239,68,68,.1)}
+        .btn.pp{border-color:rgba(168,85,247,.5);color:var(--pur)}.btn.pp:hover{background:rgba(168,85,247,.1)}
+        .btn.active{border-color:var(--acc);color:var(--acc2);background:rgba(59,130,246,.08)}
+        .btn-f{border-color:var(--bdr);color:var(--txt2)}.btn-f:hover{background:rgba(255,255,255,.05);color:var(--txt)}
+        .srch{width:180px;height:32px;padding:0 12px;border-radius:6px;border:1px solid var(--bdr);background:transparent;color:var(--txt);font-size:.75rem;outline:none;font-family:inherit;transition:all .2s;box-sizing:border-box}
+        .srch:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+        .srch::placeholder{color:var(--txt2);opacity:.5}
+
+        /* Gantt */
+        .gantt{background:var(--s1);border:1px solid var(--bdr);border-radius:14px;overflow:hidden}
+        .gs{overflow-x:auto}
+        .gh{display:grid;grid-template-columns:240px repeat(12,minmax(55px,1fr));background:var(--s2);border-bottom:2px solid var(--bdr);min-width:900px}
+        .ghc{padding:10px 3px;text-align:center;color:var(--txt2);font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;border-right:1px solid var(--bdr)}
+        .ghc:first-child{text-align:left;padding-left:12px;font-size:.65rem;display:flex;align-items:center;gap:5px}
+        .ghc:first-child svg{width:11px;height:11px;fill:currentColor}
+        .gb{max-height:580px;overflow-y:auto}
+        .gr{display:grid;grid-template-columns:240px repeat(12,minmax(55px,1fr));border-bottom:1px solid var(--bdr);transition:all .15s;cursor:pointer;min-width:900px}
+        .gr:hover{background:rgba(30,41,59,.5)}.gr.dn{background:rgba(34,197,94,.04)}.gr.dn .rl span{text-decoration:line-through;color:var(--txt2)}
+        .rl{padding:8px 10px;font-size:.76rem;font-weight:500;display:flex;align-items:center;gap:6px;border-right:1px solid var(--bdr);overflow:hidden}
+        .rl span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .cb{width:16px;height:16px;border-radius:4px;border:2px solid var(--bdr);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s;cursor:pointer}
+        .cb svg{width:9px;height:9px;fill:#fff;opacity:0;transition:opacity .2s}
+        .cb:hover{border-color:var(--acc);transform:scale(1.1)}
+        .cb.ck{background:var(--grn);border-color:var(--grn);animation:ckb .4s}
+        .cb.ck svg{opacity:1}
+        @keyframes ckb{0%{transform:scale(.8)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+        .rd{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+        .rd-h{background:var(--red)}.rd-m{background:var(--yel)}.rd-l{background:var(--grn)}
+        .rc{padding:8px 2px;display:flex;align-items:center;justify-content:center;border-right:1px solid rgba(51,65,85,.15)}
+        .bar{width:88%;height:22px;border-radius:6px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+        .bar:hover{transform:scaleY(1.3);filter:brightness(1.15)}
+        .bar-ph{background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 2px 8px rgba(59,130,246,.25)}
+        .bar-ph.dn{background:linear-gradient(135deg,var(--grn),var(--grn2));box-shadow:0 2px 8px rgba(34,197,94,.25)}
+        .bar-ph .bp{position:absolute;inset:0;background:rgba(255,255,255,.1)}
+        .ms{width:18px;height:18px;background:linear-gradient(135deg,var(--org),var(--org2));border-radius:50%;box-shadow:0 2px 10px rgba(249,115,22,.35);cursor:pointer;transition:all .25s}
+        .ms:hover{transform:scale(1.3)}.ms.dn{background:linear-gradient(135deg,var(--grn),var(--grn2));box-shadow:0 2px 10px rgba(34,197,94,.35)}
+
+        /* Tooltip */
+        .tip{display:none;position:fixed;background:var(--s1);border:1px solid var(--bdr);border-radius:12px;padding:16px 18px;font-size:.75rem;z-index:10000;max-width:320px;min-width:240px;box-shadow:0 16px 50px rgba(0,0,0,.5)}
+        .tip.show{display:block;animation:fu .2s ease}
+        .tip h4{font-size:.85rem;margin-bottom:6px;color:var(--acc2);font-weight:700}
+        .tip-r{display:flex;justify-content:space-between;margin:2px 0;font-size:.72rem;gap:8px}.tip-r .l{color:var(--txt2);flex-shrink:0}.tip-r .vl{font-weight:600;text-align:right}
+        .tip-s{display:inline-block;padding:2px 8px;border-radius:5px;font-size:.64rem;font-weight:700;margin-top:6px;text-transform:uppercase}
+
+        /* Legend */
+        .leg{display:flex;gap:12px;padding:10px 14px;background:var(--s2);border-top:1px solid var(--bdr);flex-wrap:wrap;font-size:.68rem;color:var(--txt2)}
+        .leg-i{display:flex;align-items:center;gap:5px}
+        .leg-b{width:18px;height:7px;border-radius:3px}.leg-ph{background:linear-gradient(90deg,var(--acc),var(--acc2))}.leg-dn{background:linear-gradient(90deg,var(--grn),var(--grn2))}.leg-ms{width:7px;height:7px;background:var(--org);border-radius:50%}
+
+        .ftr{text-align:center;padding:14px;color:var(--txt2);font-size:.65rem;margin-top:14px}
+
+        /* Modal */
+        .mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:20000;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+        .mbg.show{display:flex}
+        .mdl{background:var(--s1);border:1px solid var(--bdr);border-radius:14px;padding:24px;max-width:420px;width:90%;animation:fu .3s ease}
+        .mdl h3{font-size:.95rem;margin-bottom:12px;color:var(--acc2);font-weight:700}
+        .mdl textarea{width:100%;height:100px;border-radius:8px;border:1px solid var(--bdr);background:var(--s2);color:var(--txt);padding:10px;font-family:inherit;font-size:.8rem;resize:vertical;outline:none}
+        .mdl textarea:focus{border-color:var(--acc)}
+        .mdl-a{display:flex;gap:6px;justify-content:flex-end;margin-top:12px}
+
+        /* Toast */
+        .toast{position:fixed;bottom:24px;right:24px;background:var(--s1);border:1px solid var(--bdr);color:var(--txt);padding:10px 18px;border-radius:10px;font-size:.8rem;box-shadow:0 10px 40px rgba(0,0,0,.4);transform:translateY(100px);opacity:0;transition:all .4s;z-index:30000;display:flex;align-items:center;gap:8px}
+        .toast.show{transform:translateY(0);opacity:1}
+
+        @media(max-width:768px){.sts{grid-template-columns:repeat(2,1fr)}.st .v{font-size:1rem}.mp-grid{grid-template-columns:1fr}}
+    </style>
+</head>
+<body>
+<div class="app">
+    <header class="hdr">
+        <div class="hdr-c">
+            <div>
+                <h1>Gantt Premium - Mesa de Ayuda CETECOM</h1>
+                <p>Sistema Centralizado de Mesa de Ayuda y Gestion de Insumos | Duoc UC Sede Melipilla</p>
+            </div>
+            <div class="hdr-b">
+                <span class="bdg bdg-bl">
+                    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    PMBOK 7a Ed.
+                </span>
+                <span class="bdg bdg-gn" id="bPred" onclick="openMeth()">
+                    <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Predictivo
+                    <svg viewBox="0 0 24 24" style="width:10px;height:10px;opacity:.7"><path d="M7 10l5 5 5-5z"/></svg>
+                </span>
+                <span class="bdg bdg-or">
+                    <svg viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    12 Semanas
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <div class="sts">
+        <div class="st"><h3><svg viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Presupuesto</h3><div class="v">$14.375.000</div><div class="s">CLP total</div></div>
+        <div class="st"><h3><svg viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Duracion</h3><div class="v">12 Sem</div><div class="s">29/09 - 08/12</div></div>
+        <div class="st"><h3><svg viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>Fases</h3><div class="v">7</div><div class="s">EDT completa</div></div>
+        <div class="st"><h3><svg viewBox="0 0 24 24"><path d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/></svg>Hitos</h3><div class="v">6</div><div class="s">Fechas fijas</div></div>
+        <div class="st"><h3><svg viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>Riesgos</h3><div class="v">4</div><div class="s">R-01 a R-04</div></div>
+        <div class="st"><h3><svg viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Completado</h3><div class="v" id="cc">0%</div><div class="s" id="cs">0/13 tareas</div></div>
+    </div>
+
+    <div class="cdb" id="cdB"></div>
+
+    <div class="pg">
+        <div class="pg-h"><h3><svg viewBox="0 0 24 24"><path d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/><path d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/></svg>Progreso General</h3><span id="pp">0%</span></div>
+        <div class="pg-b"><div class="pg-f" id="pf" style="width:0%"></div></div>
+    </div>
+
+    <div class="ctrl">
+        <button class="btn gn" onclick="markAll()"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Marcar todo</button>
+        <button class="btn active" onclick="filt('all')" data-f="all">Todo</button>
+        <button class="btn btn-f" onclick="filt('phase')" data-f="phase">Fases</button>
+        <button class="btn btn-f" onclick="filt('milestone')" data-f="milestone">Hitos</button>
+        <button class="btn pp" onclick="exp()"><svg viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>Exportar</button>
+        <button class="btn rd" onclick="resetAll()"><svg viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>Eliminar</button>
+        <input type="text" class="srch" placeholder="Buscar..." oninput="srch(this.value)">
+    </div>
+
+    <div class="gantt">
+        <div class="gs"><div class="gh" id="gH"></div></div>
+        <div class="gb" id="gB"></div>
+        <div class="leg">
+            <div class="leg-i"><div class="leg-b leg-ph"></div>Fase activa</div>
+            <div class="leg-i"><div class="leg-b leg-dn"></div>Completada</div>
+            <div class="leg-i"><div class="leg-ms"></div>Hito</div>
+            <div class="leg-i"><div class="rd rd-h"></div>Riesgo alto</div>
+            <div class="leg-i"><div class="rd rd-m"></div>Riesgo medio</div>
+            <div class="leg-i"><div class="rd rd-l"></div>Riesgo bajo</div>
+            <div class="leg-i" style="margin-left:auto;opacity:.6">Clic = completar | Clic derecho = notas</div>
+        </div>
+    </div>
+
+    <div class="ftr">Proyecto CETECOM Melipilla | GPY1102 | PMBOK 7a Ed. | Metodologia Predictiva</div>
+</div>
+
+<div class="tip" id="tip"></div>
+<div class="toast" id="toast"></div>
+
+<div class="mbg" id="modal">
+    <div class="mdl">
+        <h3>Notas de la tarea</h3>
+        <div id="mN" style="font-size:.8rem;color:var(--txt2);margin-bottom:8px"></div>
+        <textarea id="mI" placeholder="Escribe notas..."></textarea>
+        <div class="mdl-a">
+            <button class="btn rd" onclick="closeM()">Cancelar</button>
+            <button class="btn gn" onclick="saveM()">Guardar</button>
+        </div>
+    </div>
+</div>
+
+<div class="mbg" id="filesModal">
+    <div class="mdl" style="max-width:480px">
+        <h3 style="display:flex;align-items:center;gap:8px">
+            <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--acc2)"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span id="fmTitle">Archivos disponibles</span>
+        </h3>
+        <div id="fmList" style="display:flex;flex-direction:column;gap:6px;max-height:300px;overflow-y:auto"></div>
+        <div class="mdl-a" style="margin-top:14px">
+            <button class="btn" onclick="closeFM()">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<div class="mp" id="mMeth">
+    <div class="mp-box" style="position:relative">
+        <button class="mp-close" onclick="closeMeth()">
+            <svg viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <h3>
+            <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            Por que Metodologia Predictiva / Cascada?
+        </h3>
+        <div class="mp-grid">
+            <div class="mp-c ok">
+                <h4>
+                    <svg viewBox="0 0 24 24" style="fill:var(--grn2)"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Predictivo / Cascada
+                </h4>
+                <p>Alcance definido, fecha fija, presupuesto cerrado. Ideal para requisitos estables y entorno institucional.</p>
+                <span class="mp-tg tg-s">Seleccionado</span>
+            </div>
+            <div class="mp-c no">
+                <h4>
+                    <svg viewBox="0 0 24 24" style="fill:var(--red)"><path d="M18 12H6m12 0l-4-4m4 4l-4 4"/></svg>
+                    Scrum / Agile
+                </h4>
+                <p>Requiere requisitos flexibles, equipo grande, iteraciones. No garantiza fecha ni presupuesto fijo.</p>
+                <span class="mp-tg tg-n">Descartado</span>
+            </div>
+            <div class="mp-c no">
+                <h4>
+                    <svg viewBox="0 0 24 24" style="fill:var(--red)"><path d="M18 12H6m12 0l-4-4m4 4l-4 4"/></svg>
+                    Kanban
+                </h4>
+                <p>Sin fases ni hitos. Sirve para soporte continuo, no para proyectos con entrega definida.</p>
+                <span class="mp-tg tg-n">Descartado</span>
+            </div>
+            <div class="mp-c no">
+                <h4>
+                    <svg viewBox="0 0 24 24" style="fill:var(--red)"><path d="M18 12H6m12 0l-4-4m4 4l-4 4"/></svg>
+                    Hibrido
+                </h4>
+                <p>Complejidad innecesaria para un equipo reducido de 6 personas.</p>
+                <span class="mp-tg tg-n">Descartado</span>
+            </div>
+        </div>
+        <div class="mp-ft">
+            <strong>5 razones de CETECOM:</strong><br>
+            (1) <strong>Alcance definido</strong>: Mail-to-Ticket, PWA, QR<br>
+            (2) <strong>Fecha fija</strong>: 08/12/2026<br>
+            (3) <strong>Presupuesto cerrado</strong>: $14.375.000 CLP<br>
+            (4) <strong>Equipo reducido</strong>: PM, 2 Devs, UX, QA, DBA<br>
+            (5) <strong>Entorno institucional</strong>: Duoc UC formal
+        </div>
+    </div>
+</div>
+
+<script>
+const ST=new Date(2026,8,29);
+const HD=[
+{id:'m1',d:new Date(2026,8,29),l:'Acta + SRS',files:['1.2.1_Acta_de_Constitucion_CETECOM_Melipilla.docx','Plantilla_Documento_SRS_CETECOM.docx']},
+{id:'m2',d:new Date(2026,9,13),l:'Diseno + BD',files:['Guia_Apoyo_Visual_Papel_Kraft.png','2.4_EDT_y_Diccionario_CETECOM_Melipilla.xlsx']},
+{id:'m3',d:new Date(2026,10,3),l:'Backend API',files:[]},
+{id:'m4',d:new Date(2026,10,17),l:'Frontend + PWA',files:[]},
+{id:'m5',d:new Date(2026,11,1),l:'UAT Aula',files:[]},
+{id:'m6',d:new Date(2026,11,8),l:'Produccion',files:[]}
+];
+
+const I=[
+{id:'p1',t:'phase',n:'1.0 Gestion del Proyecto',w:[1,2],d:'Acta de Constitucion, Plan de Direccion, Control de Cambios',r:'PM',dl:'Acta 1.2.1, Informes',c:'$3.600.000',rk:'low',
+ files:['1.2.1_Acta_de_Constitucion_CETECOM_Melipilla.docx','1.3.1_Matriz_RACI_CETECOM_Melipilla.xlsx','2.6_Presupuesto_Detallado_CETECOM_Melipilla.xlsx','2.7_Plan_de_Gestion_de_Calidad_y_Riesgos_Melipilla.docx','2.8_Plan_de_Gestion_de_Recursos_CETECOM.docx','Plan_de_Gestion_de_Interesados_CETECOM.docx','Plantilla_Gestion_del_Alcance_CETECOM.docx','Plantilla_Plan_de_Comunicaciones_CETECOM.docx','2.10_Matriz_de_Adquisiciones_CETECOM.xlsx','Informe_Ejecutivo_PMBOK_CETECOM_Melipilla.pdf']},
+{id:'p2',t:'phase',n:'2.0 Ingenieria de Requisitos',w:[1,2],d:'Levantamiento Sede Melipilla, Documento SRS',r:'PM + Devs',dl:'SRS, Diagramas',c:'$1.200.000',rk:'low',
+ files:['Plantilla_Documento_SRS_CETECOM.docx']},
+{id:'p3',t:'phase',n:'3.0 Diseno y Arquitectura',w:[3,4],d:'Maquetas UX/UI, Modelo PostgreSQL',r:'UX + DBA',dl:'Wireframes, Modelo BD',c:'$1.800.000',rk:'med',files:[]},
+{id:'p4',t:'phase',n:'4.0 Desarrollo Backend',w:[5,6,7],d:'Parser Mail-to-Ticket, API Push, Portal Web',r:'Dev Backend',dl:'API REST, Parser, Push',c:'$2.700.000',rk:'high',files:[]},
+{id:'p5',t:'phase',n:'5.0 Desarrollo Frontend',w:[8,9],d:'Portal Web Docente, PWA Movil Tecnicos',r:'Dev Frontend',dl:'PWA, Portal',c:'$2.700.000',rk:'med',files:[]},
+{id:'p6',t:'phase',n:'6.0 Calidad / QA / UAT',w:[10,11],d:'Pruebas unitarias, estres, UAT en aula',r:'QA',dl:'Reportes QA, UAT',c:'$1.500.000',rk:'med',files:[]},
+{id:'p7',t:'phase',n:'7.0 Despliegue y Cierre',w:[12],d:'Migracion Cloud, Capacitacion, Acta Cierre',r:'DBA + PM',dl:'Produccion, Acta',c:'$1.500.000',rk:'low',files:[]},
+{id:'m1',t:'milestone',n:'Hito 1: Acta + SRS',w:[2],d:'Firma Acta y Aprobacion SRS',r:'Sponsor + PM',dt:'29/09/2026',dl:'Acta + SRS aprobados',rk:'low',
+ files:['1.2.1_Acta_de_Constitucion_CETECOM_Melipilla.docx','Plantilla_Documento_SRS_CETECOM.docx']},
+{id:'m2',t:'milestone',n:'Hito 2: Diseno + BD',w:[4],d:'Validacion UX/UI y Modelo BD',r:'UX + DBA',dt:'13/10/2026',dl:'Wireframes + BD',rk:'low',
+ files:['Guia_Apoyo_Visual_Papel_Kraft.png','2.4_EDT_y_Diccionario_CETECOM_Melipilla.xlsx']},
+{id:'m3',t:'milestone',n:'Hito 3: Backend API',w:[7],d:'Parser + API Push operativas',r:'Dev Backend',dt:'03/11/2026',dl:'API + Parser listos',rk:'high',files:[]},
+{id:'m4',t:'milestone',n:'Hito 4: Frontend + PWA',w:[9],d:'Portal + PWA funcionales',r:'Dev Frontend',dt:'17/11/2026',dl:'Portal + PWA listos',rk:'med',files:[]},
+{id:'m5',t:'milestone',n:'Hito 5: UAT en Aula',w:[11],d:'Pruebas aceptacion con docentes',r:'QA + Docentes',dt:'01/12/2026',dl:'UAT aprobada',rk:'high',files:[]},
+{id:'m6',t:'milestone',n:'Hito 6: Produccion',w:[12],d:'Despliegue final y cierre',r:'DBA + PM',dt:'08/12/2026',dl:'Sistema en produccion',rk:'low',files:[]}
+];
+
+// Auto-complete phases with existing files
+const autoDone={p1:true,p2:true,m1:true,m2:true};
+let comp=JSON.parse(localStorage.getItem('g6c')||'{}');
+comp={...autoDone,...comp};
+let notes=JSON.parse(localStorage.getItem('g6n')||'{}');
+let nId=null;
+
+function sv(){localStorage.setItem('g6c',JSON.stringify(comp));localStorage.setItem('g6n',JSON.stringify(notes))}
+function toast(m){const t=document.getElementById('toast');t.innerHTML=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+function wkD(w){const d=new Date(ST);d.setDate(d.getDate()+(w-1)*7);return d}
+function fmtD(d){return d.toLocaleDateString('es-CL',{day:'2-digit',month:'short'})}
+function daysU(d){const t=new Date();t.setHours(0,0,0,0);return Math.ceil((d-t)/864e5)}
+
+function updCD(){
+    const b=document.getElementById('cdB');
+    let h='<span class="lb"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:var(--txt2)"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Hitos:</span>';
+    HD.forEach((x,idx)=>{
+        const dy=daysU(x.d),dn=comp[x.id];
+        let c='var(--txt2)',dc='var(--bdr)';
+        if(dn){c='var(--grn2)';dc='var(--grn)'}
+        else if(dy>0&&dy<=14){c='var(--org2)';dc='var(--org)'}
+        else if(dy>14){c='var(--acc2)';dc='var(--acc)'}
+        else{c='var(--red)';dc='var(--red)'}
+        const txt=dn?'Listo':(dy<=0?'Vencido':dy+'d');
+        const hasFiles=dn&&x.files&&x.files.length>0;
+        h+=`<div class="cdi${hasFiles?' cdi-click':''}" ${hasFiles?`onclick="openFiles(HD[${idx}].files)"`:'title="'+x.l+'"'}>`;
+        h+=`<div class="cdd" style="background:${dc};box-shadow:0 0 6px ${dc}"></div>`;
+        h+=`<span style="color:${c}">${x.l}</span>`;
+        h+=`<span style="color:${c};font-weight:800;font-size:.68rem">${txt}</span>`;
+        if(hasFiles)h+=`<svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:${c};margin-left:2px;opacity:.8"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>`;
+        h+=`</div>`;
+    });
+    b.innerHTML=h;
+}
+
+function updProg(){
+    const t=I.length,d=Object.values(comp).filter(Boolean).length,p=Math.round(d/t*100);
+    document.getElementById('pp').textContent=p+'%';
+    document.getElementById('pf').style.width=p+'%';
+    document.getElementById('cc').textContent=p+'%';
+    document.getElementById('cs').textContent=d+'/'+t+' tareas';
+}
+
+function tog(id){comp[id]=!comp[id];sv();render();updProg();updCD();const it=I.find(i=>i.id===id);toast((comp[id]?'Completada: ':'Desmarcada: ')+it.n)}
+
+function renderH(){
+    const h=document.getElementById('gH');
+    let s='<div class="ghc"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg> Fase / Hito</div>';
+    for(let w=1;w<=12;w++){const d=wkD(w);s+=`<div class="ghc">S${w}<br><span style="font-size:.55rem;font-weight:400;opacity:.5">${fmtD(d)}</span></div>`}
+    h.innerHTML=s;
+}
+
+function render(){
+    renderH();
+    const b=document.getElementById('gB');b.innerHTML='';
+    const rc={high:'rd-h',med:'rd-m',low:'rd-l'},rl={high:'Alto',med:'Medio',low:'Bajo'};
+    I.forEach(it=>{
+        const dn=comp[it.id];
+        let r=`<div class="gr ${dn?'dn':''}" data-t="${it.t}" data-n="${it.n.toLowerCase()}" onclick="tog('${it.id}')" oncontextmenu="event.preventDefault();openM('${it.id}','${it.n.replace(/'/g,"\\'")}')">`;
+        r+=`<div class="rl"><div class="cb ${dn?'ck':''}"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div><div class="rd ${rc[it.rk]}" title="${rl[it.rk]}"></div><span>${it.n}</span></div>`;
+        for(let w=1;w<=12;w++){
+            r+=`<div class="rc">`;
+            if(it.w.includes(w)){
+                if(it.t==='phase')r+=`<div class="bar ${dn?'bar-ph dn':'bar-ph'}" onclick="event.stopPropagation();tog('${it.id}')" onmouseenter="sT(event,'${it.id}')" onmouseleave="hT()"><div class="bp"></div></div>`;
+                else r+=`<div class="ms ${dn?'dn':''}" onclick="event.stopPropagation();tog('${it.id}')" onmouseenter="sT(event,'${it.id}')" onmouseleave="hT()"></div>`;
+            }
+            r+=`</div>`;
+        }
+        r+=`</div>`;
+        b.innerHTML+=r;
+    });
+}
+
+function sT(e,id){
+    const it=I.find(i=>i.id===id),dn=comp[id],tt=document.getElementById('tip');
+    const itemIdx=I.indexOf(it);
+    const wt=it.w.map(w=>'S'+w).join(', ');
+    const sc=dn?'background:rgba(34,197,94,.12);color:#4ade80;border:1px solid rgba(34,197,94,.2)':'background:rgba(234,179,8,.12);color:#eab308;border:1px solid rgba(234,179,8,.2)';
+    const st=dn?'COMPLETADA':'PENDIENTE';
+    const rc={high:'color:#ef4444',med:'color:#eab308',low:'color:#22c55e'};
+    const rl={high:'Alto',med:'Medio',low:'Bajo'};
+    const note=notes[id]?`<div style="margin-top:6px;padding:6px 8px;background:var(--s2);border-radius:6px;font-size:.7rem;color:var(--txt2);border-left:2px solid var(--yel)"><b>Notas:</b> ${notes[id]}</div>`:'';
+    const hasFiles=it.files&&it.files.length>0;
+    const fileLinks=hasFiles?`<div style="margin-top:8px;padding:8px;background:var(--s2);border-radius:6px;border-left:2px solid var(--acc)"><div style="font-size:.68rem;font-weight:700;color:var(--acc2);margin-bottom:4px;display:flex;align-items:center;gap:4px"><svg viewBox="0 0 24 24" style="width:11px;height:11px;fill:var(--acc2)"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Archivos listos</div>${it.files.map((f,fi)=>`<div style="font-size:.7rem;color:var(--txt);padding:3px 0;cursor:pointer;display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--bdr)" onclick="event.stopPropagation();openFiles(I[${itemIdx}].files)"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:var(--grn2);flex-shrink:0"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> ${f}</div>`).join('')}</div>`:'';
+    tt.innerHTML=`<h4>${it.n}</h4>
+        <div class="tip-r"><span class="l">Semanas:</span><span class="vl">${wt}</span></div>
+        <div class="tip-r"><span class="l">Descripcion:</span><span class="vl">${it.d}</span></div>
+        <div class="tip-r"><span class="l">Responsable:</span><span class="vl">${it.r}</span></div>
+        <div class="tip-r"><span class="l">Entregables:</span><span class="vl">${it.dl}</span></div>
+        ${it.dt?`<div class="tip-r"><span class="l">Fecha Tope:</span><span class="vl" style="color:var(--org2)">${it.dt}</span></div>`:''}
+        ${it.c?`<div class="tip-r"><span class="l">Costo:</span><span class="vl">${it.c}</span></div>`:''}
+        <div class="tip-r"><span class="l">Riesgo:</span><span class="vl" style="${rc[it.rk]}">${rl[it.rk]}</span></div>
+        <span class="tip-s" style="${sc}">${st}</span>${note}${fileLinks}`;
+    tt.classList.add('show');
+    const r=e.target.getBoundingClientRect();
+    let l=r.left,t=r.top-tt.offsetHeight-8;
+    if(t<8)t=r.bottom+8;
+    if(l+320>innerWidth)l=innerWidth-330;
+    if(l<8)l=8;
+    tt.style.left=l+'px';tt.style.top=t+'px';
+    tt.onmouseenter=function(){};
+    tt.onmouseleave=function(){tt.classList.remove('show')};
+}
+
+function hT(){const tt=document.getElementById('tip');setTimeout(function(){if(!tt.matches(':hover'))tt.classList.remove('show')},100)}
+
+function openM(id,name){nId=id;document.getElementById('mN').textContent=name;document.getElementById('mI').value=notes[id]||'';document.getElementById('modal').classList.add('show')}
+function closeM(){document.getElementById('modal').classList.remove('show')}
+function saveM(){notes[nId]=document.getElementById('mI').value;sv();closeM();toast('Notas guardadas')}
+
+// Files modal
+function openFiles(files){
+    const list=document.getElementById('fmList');
+    list.innerHTML='';
+    files.forEach(f=>{
+        const ext=f.split('.').pop().toLowerCase();
+        const icons={docx:'<svg viewBox="0 0 24 24" style="fill:var(--acc2)"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>',
+            xlsx:'<svg viewBox="0 0 24 24" style="fill:var(--grn2)"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>',
+            pdf:'<svg viewBox="0 0 24 24" style="fill:var(--red)"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>',
+            png:'<svg viewBox="0 0 24 24" style="fill:var(--pur)"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>'};
+        const icon=icons[ext]||icons.docx;
+        const el=document.createElement('div');
+        el.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--s2);border-radius:8px;border:1px solid var(--bdr);cursor:pointer;transition:all .2s';
+        el.onmouseenter=function(){this.style.borderColor='var(--acc)';this.style.transform='translateX(4px)'};
+        el.onmouseleave=function(){this.style.borderColor='var(--bdr)';this.style.transform='translateX(0)'};
+        el.innerHTML=`<div style="width:32px;height:32px;border-radius:6px;background:var(--s3);display:flex;align-items:center;justify-content:center;flex-shrink:0">${icon}</div><div style="flex:1;min-width:0"><div style="font-size:.78rem;font-weight:600;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f}</div><div style="font-size:.65rem;color:var(--txt2);margin-top:2px">${ext.toUpperCase()}</div></div><svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:var(--txt2);flex-shrink:0"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>`;
+        el.onclick=function(){window.open(f,'_blank')};
+        list.appendChild(el);
+    });
+    document.getElementById('filesModal').classList.add('show');
+}
+function closeFM(){document.getElementById('filesModal').classList.remove('show')}
+
+function markAll(){I.forEach(i=>comp[i.id]=true);sv();render();updProg();updCD();toast('Todo completado')}
+function resetAll(){comp={...autoDone};sv();render();updProg();updCD();toast('Reset a estado inicial')}
+
+function filt(t){document.querySelectorAll('#gB>.gr').forEach(r=>{r.style.display=(t==='all'||r.dataset.t===t)?'grid':'none'});document.querySelectorAll('.ctrl .btn[data-f]').forEach(b=>{const isActive=b.dataset.f===t;b.classList.toggle('active',isActive);b.classList.toggle('btn-f',!isActive)})}
+function srch(q){const ql=q.toLowerCase();document.querySelectorAll('#gB>.gr').forEach(r=>{r.style.display=r.dataset.n.includes(ql)?'grid':'none'})}
+
+function exp(){
+    const d={completed:comp,notes,items:I,date:new Date().toISOString()};
+    const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='Gantt_CETECOM.json';a.click();
+    toast('Datos exportados');
+}
+
+// Meth modal
+function openMeth(){document.getElementById('mMeth').classList.add('show')}
+function closeMeth(){document.getElementById('mMeth').classList.remove('show')}
+
+document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){closeM();closeMeth();closeFM()}
+});
+
+// Close modals on backdrop click
+document.getElementById('mMeth').addEventListener('click',function(e){if(e.target===this)closeMeth()});
+document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeM()});
+document.getElementById('filesModal').addEventListener('click',function(e){if(e.target===this)closeFM()});
+
+render();updProg();updCD();setInterval(updCD,6e4);
+</script>
+</body>
+</html>
