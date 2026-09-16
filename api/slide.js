@@ -7,17 +7,13 @@ module.exports = async function handler(req, res) {
     if (req.method === 'OPTIONS') return res.status(200).end();
 
     const DB = process.env.DATABASE_URL;
-    const m = DB.match(/postgres(?:ql)?:\/\/([^:]+):([^@]+)@([^/]+)\/(.+)/);
-    if (!m) return res.status(500).json({ error: 'Bad DB URL' });
-    const [, user, pass, host] = m;
 
     try {
         if (req.method === 'POST') {
-            await neonQuery(host, user, pass,
-                'UPDATE presentation_room SET slide = $1, updated_at = NOW() WHERE id = $2',
+            await neonQuery(DB, 'UPDATE presentation_room SET slide = $1, updated_at = NOW() WHERE id = $2',
                 [String(req.body.slide), 'main']);
         }
-        const data = await neonQuery(host, user, pass,
+        const data = await neonQuery(DB,
             'SELECT slide FROM presentation_room WHERE id = $1', ['main']);
         return res.status(200).json({ slide: data.result?.[0]?.rows?.[0]?.slide ?? 0 });
     } catch (e) {
@@ -25,13 +21,17 @@ module.exports = async function handler(req, res) {
     }
 };
 
-function neonQuery(host, user, pass, sql, params) {
+function neonQuery(connStr, sql, params) {
     return new Promise((resolve, reject) => {
         const body = JSON.stringify({ query: sql, params });
-        const auth = Buffer.from(`${user}:${pass}`).toString('base64');
+        const host = 'ep-tiny-haze-ac27404h.sa-east-1.aws.neon.tech';
         const r = https.request({
             hostname: host, port: 443, path: '/sql', method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Basic ${auth}`, 'Content-Length': Buffer.byteLength(body) }
+            headers: {
+                'Content-Type': 'application/json',
+                'Neon-Connection-String': connStr,
+                'Content-Length': Buffer.byteLength(body)
+            }
         }, resp => {
             let d = '';
             resp.on('data', c => d += c);
